@@ -1,0 +1,14 @@
+smvf_config.json
+smvf_session*
+*.session
+*.session-journal
+logs/
+__pycache__/
+*.pyc
+*.pyo
+.env
+venv/
+.venv/
+smvf_*_media.*
+smvf_ping_media.*
+smvf_info_media.*
