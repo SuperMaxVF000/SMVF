@@ -48,13 +48,14 @@ step "Устанавливаю системные зависимости..."
 case "$PLATFORM" in
   termux)
     pkg update -y && pkg install -y python python-pip git
+    # cryptg not available on Termux ARM without Rust — skipped, telethon works without it
     ;;
   raspberrypi|debian|ubuntu|linuxmint)
     sudo apt-get update -y && sudo apt-get install -y python3 python3-pip python3-venv git curl
     ;;
   *)
     warn "Неизвестная платформа — попробую стандартный apt"
-    command -v apt-get >/dev/null && sudo apt-get install -y python3 python3-pip git || true
+    command -v apt-get >/dev/null && sudo apt-get install -y python3 python3-pip python3-venv git || true
     ;;
 esac
 ok "Зависимости установлены"
@@ -71,15 +72,33 @@ else
 fi
 ok "SMVF скачан в $SMVF_DIR"
 
-# ── Python venv ────────────────────────────────────────────────────────────
+# ── Python setup ────────────────────────────────────────────────────────────
 step "Настраиваю Python окружение..."
 if [ "$PLATFORM" = "termux" ]; then
-  pip install --upgrade pip
+  # Termux: no venv needed, upgrade pip+wheel first to avoid legacy install errors
+  pip install --upgrade pip wheel setuptools
   pip install -r requirements.txt
+
 else
+  # Ubuntu / UserLand / Raspberry Pi
+  # Remove old broken venv if it exists
+  if [ -d "venv" ]; then
+    info "Удаляю старое виртуальное окружение..."
+    rm -rf venv
+  fi
+
   python3 -m venv venv
+
+  # Fix permissions — UserLand on Android can have broken umask
+  chmod -R u+rw venv
+
   source venv/bin/activate
-  pip install --upgrade pip
+
+  # IMPORTANT: upgrade pip + wheel + setuptools BEFORE installing packages.
+  # Without this, legacy packages like pyaes fail with "Permission denied on egg-info".
+  pip install --upgrade pip wheel setuptools
+
+  # Now install project deps (cryptg is not in requirements, telethon works without it)
   pip install -r requirements.txt
 fi
 ok "Python зависимости установлены"
