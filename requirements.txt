@@ -1,0 +1,15 @@
+# SMVF Userbot — зависимости
+# Python 3.10+
+
+# Основа — Telegram MTProto
+telethon>=1.36.0
+
+# HTTP-клиент (загрузка модулей, проверка токена)
+aiohttp>=3.9.0
+
+# Криптография (ускорение MTProto)
+tgcrypto>=1.2.5
+
+# Системные метрики — опционально, не обязательно для работы
+# На Termux/Android устанавливается вручную: pip install psutil-termux или пропускается
+psutil>=5.9.0

@@ -1,0 +1,18 @@
+{
+  "api_id": 12345678,
+  "api_hash": "your_api_hash_here",
+  "phone": "+79001234567",
+  "language": "ru",
+  "command_prefix": ".",
+  "aliases": {},
+  "inline_bot_token": "",
+  "inline_bot_username": "",
+  "log_chat_id": null,
+  "log_chat_hash": null,
+  "healthcheck_interval": 5,
+  "ping_custom_image": "",
+  "info_custom_image": "",
+  "info_custom_message": "",
+  "info_custom_button": [],
+  "db_schema_version": 1
+}
